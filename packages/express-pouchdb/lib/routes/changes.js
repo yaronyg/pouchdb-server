@@ -72,10 +72,11 @@ module.exports = function (app) {
             cleanup();
           } else { // do the longpolling
             // mimicking CouchDB, start sending the JSON immediately
-            res.write('{"results":[\n');
+            // res.write('{"results":[\n');
             req.query.live = req.query.continuous = true;
             changes = req.db.changes(req.query)
               .on('change', function (change) {
+                res.write('{"results":[\n');
                 utils.writeJSON(res, change);
                 res.write('],\n"last_seq":' + change.seq + '}\n');
                 cleanup();
